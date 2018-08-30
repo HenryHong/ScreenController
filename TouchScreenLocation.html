@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+	<div id="middlepixel"></div>
+	<p>Screen Details:</p>
+	<p id="bwidth"></p>
+	<p id="bheight"></p>
+	<p id="bMiddleW"></p>
+	<p id="bMiddleH"></p>
+	
+	<br>
+
+	<p>For touch screens only: Get the location of the touch with your finger.</p>
+	<p id="touchxLoc">The location of X:  0</p>
+	<p id="touchyLoc">The location of Y:  0</p>
+	<p id="touchdir">Direction is: </p>
+	<br>
+	
+	<p>For touch screens only: Get the location of the mouse.</p>
+	<p id="mousexLoc">The location of X:  0</p>
+	<p id="mouseyLoc">The location of Y:  0</p>
+	<p id="clickX">The X location diff of X:  0</p>
+	<p id="clickY">The Y location diff of Y:0</p>
+	<p id="dir">Direction is: </p>
+	<br>
+	
+	<p>For Keyboard users, arrow key detection.</p>
+	<table style="width:25%">
+		<tr>
+			<td>The up key:</td>
+			<td id="upkey">X</td>
+		</tr>
+		
+		<tr>
+			<td>The down key:</td>
+			<td id="downkey">X</td>
+		</tr>
+		
+		<tr>
+			<td>The left key:</td>
+			<td id="leftkey">X</td>
+		</tr>
+		
+		<tr>
+			<td>The right key:</td>
+			<td id="rightkey">X</td>
+		</tr>
+	</table>
+	<br>
+	
+	
+	<script>
+	var touchx;
+	var touchy;
+	
+	var mousex;
+	var mousey;
+	var clickx;
+	var clicky;
+	
+	var keyarr = [];
+	
+	var w = window.innerWidth;
+	var h = window.innerHeight;
+	var wmiddle = Math.round(w/2);
+	var hmiddle = Math.round(h/2);
+	
+	document.getElementById("bheight").innerHTML = "The height of the browser is: "+ h;
+	document.getElementById("bwidth").innerHTML = "The width of the browser is: "+ w;
+	document.getElementById("bMiddleH").innerHTML = "The middle height of the browser is: "+ hmiddle;
+	document.getElementById("bMiddleW").innerHTML = "The middle width of the browser is: "+ wmiddle;
+	
+	document.getElementById("middlepixel").innerHTML = '<div style="background-color:black;position:absolute;height:0.25em;width:0.25em;left:'+wmiddle+'px;top:'+hmiddle+'px">';
+	
+	window.addEventListener('touchstart', function (e) {
+        touchx = e.touches[0].screenX;
+        touchy = e.touches[0].screenY;
+		document.getElementById("touchxLoc").innerHTML ="The location of X:  "+ Math.round(touchx);
+		document.getElementById("touchyLoc").innerHTML ="The location of Y:  "+ Math.round(touchy);
+		
+		
+		var touchdiffx = touchx - wmiddle;
+		var touchdiffy = touchy - hmiddle;
+		
+		
+		if ((touchdiffx * touchdiffx) > (touchdiffy * touchdiffy)){
+			if (((touchdiffx < 0) && (touchdiffy <= 0)) || ((touchdiffx < 0) && (touchdiffy > 0))){
+				document.getElementById("touchdir").innerHTML ="Direction is: Left";
+			}
+			else if (((touchdiffx > 0) && (touchdiffy < 0)) || ((touchdiffx > 0) && (touchdiffy >= 0))){
+				document.getElementById("touchdir").innerHTML ="Direction is: Right";
+			}
+		}
+		else if ((touchdiffx * touchdiffx) < (touchdiffy * touchdiffy)){
+			if (((touchdiffx < 0) && (touchdiffy < 0)) || ((touchdiffx >= 0) && (touchdiffy < 0))){
+				document.getElementById("touchdir").innerHTML ="Direction is: Up";
+			}
+			else if (((touchdiffx <= 0) && (touchdiffy > 0)) || ((touchdiffx > 0) && (touchdiffy > 0))){
+				document.getElementById("touchdir").innerHTML ="Direction is: Down";
+			}
+		}
+		
+		
+    })
+	
+	window.addEventListener('mousemove', function (e) {
+        mousex = e.pageX;
+        mousey = e.pageY;
+		document.getElementById("mousexLoc").innerHTML ="The location of X:  "+ Math.round(mousex);
+		document.getElementById("mouseyLoc").innerHTML ="The location of Y:  "+ Math.round(mousey);
+		
+    })
+	
+	
+	window.addEventListener('keydown', function (e) {
+        keyarr = (keyarr || []);
+        keyarr[e.keyCode] = true;
+		if (keyarr && keyarr[37]) {document.getElementById("leftkey").innerHTML ="O";}
+		if (keyarr && keyarr[39]) {document.getElementById("rightkey").innerHTML ="O";}
+		if (keyarr && keyarr[38]) {document.getElementById("upkey").innerHTML ="O";}
+		if (keyarr && keyarr[40]) {document.getElementById("downkey").innerHTML ="O";}
+			
+    })
+    window.addEventListener('keyup', function (e) {
+        keyarr[e.keyCode] = false; 
+		if (keyarr[37] == false) {document.getElementById("leftkey").innerHTML ="X";}
+		if (keyarr[39] == false) {document.getElementById("rightkey").innerHTML ="X";}
+		if (keyarr[38] == false) {document.getElementById("upkey").innerHTML ="X";}
+		if (keyarr[40] == false) {document.getElementById("downkey").innerHTML ="X";}
+			
+    })
+	
+	window.addEventListener("mousedown", function(e){
+		clickx = e.pageX;
+        clicky = e.pageY;
+		
+		var diffx = clickx - wmiddle;
+		var diffy = clicky - hmiddle;
+		
+		document.getElementById("clickX").innerHTML ="The X location diff of X:  "+ diffx;
+		document.getElementById("clickY").innerHTML ="The Y location diff of Y:  "+ diffy;
+		
+		if ((diffx * diffx) > (diffy * diffy)){
+			if (((diffx < 0) && (diffy <= 0)) || ((diffx < 0) && (diffy > 0))){
+				document.getElementById("dir").innerHTML ="Direction is: Left";
+			}
+			else if (((diffx > 0) && (diffy < 0)) || ((diffx > 0) && (diffy >= 0))){
+				document.getElementById("dir").innerHTML ="Direction is: Right";
+			}
+		}
+		else if ((diffx * diffx) < (diffy * diffy)){
+			if (((diffx < 0) && (diffy < 0)) || ((diffx >= 0) && (diffy < 0))){
+				document.getElementById("dir").innerHTML ="Direction is: Up";
+			}
+			else if (((diffx <= 0) && (diffy > 0)) || ((diffx > 0) && (diffy > 0))){
+				document.getElementById("dir").innerHTML ="Direction is: Down";
+			}
+		}
+	});
+	
+	</script>
+	
+</body>
+</html>
